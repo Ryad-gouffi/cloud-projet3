@@ -104,12 +104,19 @@ def download_file(filename: str):
 @app.delete("/delete/{filename}")
 def delete_file(filename: str):
     try:
-        MINIO_CLIENT.remove_object(BUCKET_NAME, filename)
-        cursor.execute("DELETE FROM files WHERE filename = %s", (filename,))
-        conn.commit()
-        return {"message": "File deleted", "filename": filename}
-    except S3Error:
-        return {"error": "File not found"}
+        # Check if the file exists
+        MINIO_CLIENT.stat_object(BUCKET_NAME, filename)
+    except S3Error as e:
+        if e.code == "NoSuchKey":
+            return {"error": "File not found"}
+        else:
+            return {"error": f"MinIO error: {e}"}
+
+    # File exists, remove it
+    MINIO_CLIENT.remove_object(BUCKET_NAME, filename)
+    cursor.execute("DELETE FROM files WHERE filename = %s", (filename,))
+    conn.commit()
+    return {"message": "File deleted.", "filename": filename}
 
 # -------------------- METADATA --------------------
 @app.get("/metadata/{filename}")
