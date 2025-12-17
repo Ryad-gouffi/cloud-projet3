@@ -26,13 +26,14 @@ Microservice REST pour gestion de fichiers avec métadonnées.
   Démarrage rapide
 bash
 
-git clone [repo-url]
+git clone https://github.com/Ryad-gouffi/cloud-projet3.git
+
 cd project-3
 docker-compose up -d
 
 API: http://localhost:8000
 MinIO: http://localhost:9000 (admin/admin123)
-📁 Endpoints Principaux
+  Endpoints Principaux
 
     POST /upload/ - Upload fichier
 
@@ -42,7 +43,7 @@ MinIO: http://localhost:9000 (admin/admin123)
 
     DELETE /files/{id} - Supprimer
 
-📄 Livrables
+  Livrables
 
     Code API complète
 
